@@ -1,0 +1,87 @@
+Promise.all([
+    faceapi.nets.tinyFaceDetector.loadFromUri('/models'),
+    faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
+    faceapi.nets.faceRecognitionNet.loadFromUri('/models')
+]).then(startRealFaceAuth);
+
+// Real matching (store known face during signup)
+let knownDescriptor;
+async function captureKnownFace() {
+    const detections = await faceapi.detectAllFaces(video).withFaceLandmarks().withFaceDescriptors();
+    knownDescriptor = detections[0].descriptor; // Save to localStorage
+}
+
+async function verifyFace() {
+    const detections = await faceapi.detectAllFaces(video).withFaceLandmarks().withFaceDescriptors();
+    const faceMatcher = new faceapi.FaceMatcher(knownDescriptor, 0.6);
+    const bestMatch = faceMatcher.findBestMatch(detections[0].descriptor);
+    return bestMatch.label === 'known' && bestMatch.distance < 0.6;
+}
+// Stripe Setup (pk_test_... from stripe.com/dashboard)
+const stripe = Stripe('pk_test_51ABC123...'); // Replace with your key
+const elements = stripe.elements();
+const card = elements.create('card', {style: {base: {color: 'var(--dark-green)', fontFamily: 'Inter'}}});
+card.mount('#card-element');
+
+document.getElementById('submit-payment').addEventListener('click', async () => {
+    const btn = document.getElementById('submit-payment');
+    btn.textContent = 'Processing...';
+    btn.disabled = true;
+    
+    const {error, paymentMethod} = await stripe.createPaymentMethod('card', card);
+    if (error) {
+        document.getElementById('card-errors').textContent = error.message;
+    } else {
+        // Mock success (real: send paymentMethod.id to your backend)
+        alert('✅ Payment Successful! ₹500 credited + Welcome Bonus!');
+        localStorage.setItem('transactions', JSON.stringify([...(JSON.parse(localStorage.getItem('transactions') || '[]')), {
+            date: new Date().toLocaleDateString(),
+            amount: document.getElementById('amount').value,
+            type: 'Card Payment'
+        }]));
+        goToPage('dashboard');
+    }
+    btn.textContent = 'Pay with Stripe';
+    btn.disabled = false;
+});
+let currentFormData = {};
+
+function nextStep(nextPage) {
+    // Save current step data
+    if (document.getElementById('personal-details').classList.contains('active')) {
+        currentFormData.personal = {
+            name: document.getElementById('fullName').value,
+            dob: document.getElementById('dob').value,
+            pan: document.getElementById('pan').value,
+            aadhaar: document.getElementById('aadhaar').value
+        };
+    } else {
+        currentFormData.contact = {
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            address: document.getElementById('address').value,
+            city: document.getElementById('city').value,
+            state: document.getElementById('state').value
+        };
+    }
+    goToPage(nextPage);
+}
+
+function prevStep(prevPage) {
+    goToPage(prevPage);
+}
+
+function submitAccountDetails() {
+    // Populate review
+    document.getElementById('review-name').textContent = currentFormData.personal?.name || '-';
+    document.getElementById('review-dob').textContent = currentFormData.personal?.dob || '-';
+    document.getElementById('review-pan').textContent = currentFormData.personal?.pan || '-';
+    document.getElementById('review-email').textContent = currentFormData.contact?.email || '-';
+    document.getElementById('review-phone').textContent = currentFormData.contact?.phone || '-';
+    
+    localStorage.setItem('userData', JSON.stringify(currentFormData));
+    startChat(currentFormData.personal?.name || 'Customer');
+}
+
+// Update home button
+document.querySelector('.hero .btn').onclick = () => goToPage('personal-details')

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Bridge Bank - AI Digital Banking</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+--dark-green:#004d00;
+--mint:#3EB489;
+--emerald:#50C878;
+--gold:#FFD700;
+--cream:#FFFDD0;
+--shadow:rgba(0,0,0,0.15);
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
+body{background:linear-gradient(135deg,var(--cream),#f2fff2);color:var(--dark-green);}
+header{
+position:fixed;top:0;width:100%;background:var(--dark-green);
+color:white;padding:15px 30px;display:flex;
+justify-content:space-between;align-items:center;z-index:1000;
+}
+.logo{font-size:22px;font-weight:800;color:var(--gold);}
+nav ul{display:flex;list-style:none;gap:20px;}
+nav a{color:white;text-decoration:none;font-weight:600;}
+nav a:hover{color:var(--gold);}
+.nav-toggle{display:none;font-size:24px;background:none;border:none;color:white;}
+
+.page{display:none;padding-top:100px;min-height:100vh;}
+.page.active{display:block;}
+
+.container{max-width:1200px;margin:auto;padding:20px;}
+
+.hero{
+background:linear-gradient(135deg,var(--mint),var(--emerald));
+color:white;text-align:center;padding:120px 20px 80px;
+}
+.hero h1{font-size:3em;margin-bottom:15px;}
+.btn{
+padding:12px 30px;border:none;border-radius:30px;
+background:var(--dark-green);color:white;
+cursor:pointer;margin:10px;
+}
+.btn-gold{background:var(--gold);color:var(--dark-green);font-weight:700;}
+.btn:hover{opacity:0.9;}
+
+.card-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:25px;margin:40px 0;
+}
+.card{
+background:white;padding:30px;border-radius:15px;
+box-shadow:0 10px 25px var(--shadow);
+}
+
+.account-form{
+max-width:500px;margin:auto;background:white;
+padding:40px;border-radius:15px;
+box-shadow:0 10px 25px var(--shadow);
+}
+input,select,textarea{
+width:100%;padding:12px;margin:10px 0;
+border-radius:8px;border:1px solid #ccc;
+}
+
+footer{
+background:var(--dark-green);
+color:white;padding:60px 20px 20px;margin-top:60px;
+}
+footer h3{color:var(--gold);margin-bottom:15px;}
+footer a{color:white;text-decoration:none;}
+
+@media(max-width:768px){
+nav ul{display:none;flex-direction:column;background:var(--dark-green);position:absolute;top:60px;right:0;padding:20px;}
+nav ul.active{display:flex;}
+.nav-toggle{display:block;}
+.hero h1{font-size:2em;}
+}
+</style>
+</head>
+<body>
+
+<header>
+<div class="logo">AI BRIDGE BANK</div>
+<nav>
+<ul id="navList">
+<li><a href="#" onclick="goToPage('home')">Home</a></li>
+<li><a href="#" onclick="goToPage('login')">Login</a></li>
+<li><a href="#" onclick="goToPage('onboard')">Onboard</a></li>
+<li><a href="#" onclick="goToPage('dashboard')">Dashboard</a></li>
+<li><a href="#" onclick="goToPage('services')">Services</a></li>
+<li><a href="#" onclick="goToPage('admin')">Admin</a></li>
+<li><a href="#" onclick="goToPage('about')">About</a></li>
+</ul>
+</nav>
+<button class="nav-toggle" onclick="toggleNav()">☰</button>
+</header>
+
+<!-- 1 HOME -->
+<div id="home" class="page active">
+<section class="hero">
+<h1>AI-Powered Digital Banking</h1>
+<p>Open Account in 5 Minutes | 99.9% Secure | RBI Compliant</p>
+<button class="btn btn-gold" onclick="goToPage('onboard')">Open Account</button>
+</section>
+
+<div class="container">
+<div class="card-grid">
+<div class="card"><h3>🔒 Biometric KYC</h3><p>Face + Liveness Detection</p></div>
+<div class="card"><h3>📄 OCR Verification</h3><p>Instant PAN/Aadhaar Scan</p></div>
+<div class="card"><h3>⚡ Instant Activation</h3><p>No Branch Required</p></div>
+</div>
+</div>
+</div>
+
+<!-- 2 LOGIN -->
+<div id="login" class="page">
+<div class="container">
+<div class="account-form">
+<h2>Secure Login</h2>
+<input placeholder="Email">
+<button class="btn">Send OTP</button>
+</div>
+</div>
+</div>
+
+<!-- 3 ONBOARD -->
+<div id="onboard" class="page">
+<div class="container">
+<div class="account-form">
+<h2>Open Account</h2>
+<input placeholder="Full Name">
+<input placeholder="PAN Number">
+<input placeholder="Aadhaar Last 4 Digits">
+<button class="btn btn-gold">Submit</button>
+</div>
+</div>
+</div>
+
+<!-- 4 DASHBOARD -->
+<div id="dashboard" class="page">
+<div class="container">
+<h2>User Dashboard</h2>
+<div class="card-grid">
+<div class="card"><h3>Balance ₹50,500</h3></div>
+<div class="card"><h3>Recent Transactions</h3><p>Salary +₹25,000</p></div>
+</div>
+</div>
+</div>
+
+<!-- 5 SERVICES -->
+<div id="services" class="page">
+<div class="container">
+<h2>Banking Services</h2>
+<div class="card-grid">
+<div class="card"><h3>Loans</h3><p>Up to ₹5L</p></div>
+<div class="card"><h3>Credit Card</h3><p>5% Cashback</p></div>
+<div class="card"><h3>Fixed Deposit</h3><p>8.5% Interest</p></div>
+</div>
+</div>
+</div>
+
+<!-- 6 ADMIN -->
+<div id="admin" class="page">
+<div class="container">
+<h2>Admin Panel</h2>
+<div class="card"><p>Pending KYC Reviews: 3</p></div>
+</div>
+</div>
+
+<!-- 7 PROFILE -->
+<div id="profile" class="page">
+<div class="container">
+<h2>User Profile</h2>
+<div class="card"><p>Name: John Doe</p><p>KYC: Verified</p></div>
+</div>
+</div>
+
+<!-- 8 PAYMENTS -->
+<div id="payments" class="page">
+<div class="container">
+<h2>Payments</h2>
+<div class="account-form">
+<input placeholder="Amount ₹">
+<button class="btn btn-gold">Pay Now</button>
+</div>
+</div>
+</div>
+
+<!-- 9 DOCUMENT UPLOAD -->
+<div id="documents" class="page">
+<div class="container">
+<h2>Upload Documents</h2>
+<div class="card">Drag & Drop Files Here</div>
+</div>
+</div>
+
+<!-- 10 BIOMETRICS -->
+<div id="biometric" class="page">
+<div class="container">
+<h2>Face Verification</h2>
+<div class="card">Camera Scan Demo</div>
+</div>
+</div>
+
+<!-- 11 CHAT -->
+<div id="chat" class="page">
+<div class="container">
+<h2>AI Assistant</h2>
+<div class="card">Chat Interface</div>
+</div>
+</div>
+
+<!-- 12 ABOUT -->
+<div id="about" class="page">
+<section class="hero">
+<h1>About AI Bridge Bank</h1>
+<p>India’s First AI-Powered Digital Banking Platform</p>
+</section>
+
+<div class="container">
+<div class="card-grid">
+<div class="card"><h3>Our Mission</h3><p>Reduce onboarding to 5 minutes.</p></div>
+<div class="card"><h3>Security</h3><p>ISO 27001 | RBI Compliant</p></div>
+<div class="card"><h3>Impact</h3><p>1M+ Users | 95% OCR Accuracy</p></div>
+</div>
+</div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+<div class="container">
+<div class="card-grid">
+<div>
+<h3>AI Bridge Bank</h3>
+<p>AI Digital Banking Platform</p>
+</div>
+<div>
+<h3>Contact</h3>
+<p>Email: support@aibridgebank.com</p>
+<p>Phone: +91 98765 43210</p>
+<p>Address: BKC, Mumbai, Maharashtra, India</p>
+</div>
+<div>
+<h3>Quick Links</h3>
+<p><a href="#" onclick="goToPage('home')">Home</a></p>
+<p><a href="#" onclick="goToPage('services')">Services</a></p>
+</div>
+</div>
+<hr style="margin:30px 0;border:0;height:1px;background:#ffffff30;">
+<p style="text-align:center;">© 2026 AI Bridge Bank. All Rights Reserved.</p>
+</div>
+</footer>
+
+<script>
+function goToPage(id){
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+}
+function toggleNav(){
+document.getElementById('navList').classList.toggle('active');
+}
+</script>
+
+</body>
+</html>
